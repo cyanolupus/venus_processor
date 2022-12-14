@@ -1,4 +1,4 @@
-name: Verible linter example
+name: verilog lint
 on:
   push:
     branches:
