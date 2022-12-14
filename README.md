@@ -3,5 +3,5 @@
 金星プロセッサをつくる．
 
 ## ドキュメント
-- [仕様書](./venus_processor/docs/venus_spec.md)
-- [命令表](./venus_processor/docs/venus_opecode.md)
+- [仕様書](./docs/venus_spec.md)
+- [命令表](./docs/venus_opecode.md)
