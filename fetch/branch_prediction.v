@@ -9,7 +9,6 @@ module branch_prediction (
     input clk, reset;
     input v_i;
     input stall_i;
-    input table_i;
     input branch_i;
     input [W_BRID -1: 0] branch_id_i;
     output pred_o;

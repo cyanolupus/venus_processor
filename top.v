@@ -11,8 +11,6 @@ module top(clk, reset, stall_i,
     input [WORD -1:0] inst_i;
     output [ADDR -1:0] inst_addr_o;
 
-    assign inst_addr_o = (pred_bpf & v_btf)?pred_addr_btf:pc_pf;
-
     input [W_OPR -1:0] ldst_data_i;
     output [W_OPR -1:0] ldst_data_o;
     output [ADDR -1:0] ldst_addr_o;
@@ -25,9 +23,6 @@ module top(clk, reset, stall_i,
     wire branch_wire;
     wire [ADDR -1: 0] branch_addr_pre;
     wire [ADDR -1: 0] branch_addr_wire;
-
-    assign branch_wire = (branch_id_ebp[1] ^ branch_ebp) & v_ebp;
-    assign branch_addr_wire = (branch_ebp)?branch_addr_pre:pc_de+1;
 
     // pc - fetch
     wire [ADDR -1: 0] pc_pf;
@@ -76,6 +71,10 @@ module top(clk, reset, stall_i,
     wire v_ebp;
     wire branch_ebp;
     wire [W_BRID -1: 0] branch_id_ebp;
+
+    assign inst_addr_o = (pred_bpf & v_btf)?pred_addr_btf:pc_pf;
+    assign branch_wire = (branch_id_ebp[1] ^ branch_ebp) & v_ebp;
+    assign branch_addr_wire = (branch_ebp)?branch_addr_pre:pc_de+1;
 
     execute_instruction exec(
         .clk(clk), .reset(reset),
