@@ -13,7 +13,15 @@ jobs:
     container:
       image: verilator/verilator:latest
     steps:
-    - name: Checkout
+    - name: Checkout(venus_processor)
       uses: actions/checkout@v3
+      with:
+        repository: cyanolupus/venus_processor
+        path: venus_processor
+    - name: Checkout(vasm)
+      uses: actions/checkout@v3
+      with:
+        repository: cyanolupus/vasm
+        path: vasm
     - name: Verilator
-      run: make -C build/ verilator-build
+      run: make -C venus_processor/build/ verilator-build
