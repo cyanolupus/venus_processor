@@ -71,7 +71,6 @@ module execute_instruction (clk, reset,
     wire [W_OPR -1: 0] selected_result;
 
     wire [W_FLAGS -1: 0] flags_null = {W_FLAGS{1'b0}};
-    wire [W_OPR -1: 0] selected_flags_pre;
     wire [W_FLAGS -1: 0] selected_flags;
 
     wire [W_CC -1: 0] cc = opr0_i[W_CC -1:0];
@@ -141,13 +140,11 @@ module execute_instruction (clk, reset,
         result_logic, result_set, result_null, result_null,
         result_null, result_null, result_null, result_null);
 
-    assign selected_flags_pre = select4_4bit(executor,
+    assign selected_flags = select4_4bit(executor,
         flags_addx, flags_mulx, flags_divx, flags_cmp,
         flags_absx, flags_null, flags_shift, flags_rotate,
         flags_logic, flags_null, flags_null, flags_null,
         flags_null, flags_null, flags_null, flags_null);
-    
-    assign selected_flags = selected_flags_pre[W_FLAGS - 1:0];
 
     assign v_o = v_r;
     assign stall_o = stall_i;
