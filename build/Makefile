@@ -25,7 +25,7 @@ endif
 
 verilator-build: ../top_test.v ../top.v ../mem/mem_data.v ../mem/mem_instruction.v $(fetch) $(register) $(decode) $(exec)
 	make ../mem/memfiles/mem_instruction.dat
-	verilator -cc $^
+	verilator -cc $^ -timing
 
 venus_processor_test: ../top_test.v ../top.v ../mem/mem_data.v ../mem/mem_instruction.v $(fetch) $(register) $(decode) $(exec)
 	make ../mem/memfiles/mem_instruction.dat
