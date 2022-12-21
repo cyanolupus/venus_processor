@@ -15,17 +15,5 @@ jobs:
     steps:
     - name: Checkout(venus_processor)
       uses: actions/checkout@v3
-      with:
-        repository: cyanolupus/venus_processor
-        path: venus_processor
-    - name: Checkout(vasm)
-      uses: actions/checkout@v3
-      with:
-        repository: cyanolupus/vasm
-        path: vasm
-    - name: Setup Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.10'
     - name: Verilator
-      run: make -C venus_processor/build/ verilator-build
+      run: make -C build/ verilator-build
