@@ -5,4 +5,3 @@ syn/*.vg
 build/obj_dir/
 build/*.dat
 build/*.out
-mem/memfiles/mem_instruction.dat
