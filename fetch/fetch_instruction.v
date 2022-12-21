@@ -3,7 +3,6 @@ module fetch_instruction(clk, reset,
                 stall_i, stall_o,
                 inst_i, inst_o, 
                 pc_i, pc_o,
-                brid_i, brid_o,
                 branch_i,
                 pred_i, pred_addr_i);
 
@@ -20,9 +19,6 @@ module fetch_instruction(clk, reset,
     input [ADDR -1: 0] pc_i;
     output [ADDR -1: 0] pc_o;
 
-    input [W_BRID -1: 0] brid_i;
-    output [W_BRID -1: 0] brid_o;
-
     input branch_i;
     input pred_i;
     input [ADDR -1: 0] pred_addr_i;
@@ -36,7 +32,6 @@ module fetch_instruction(clk, reset,
     assign v_o = v_r;
     assign stall_o = stall_i & v_r;
     assign pc_o = pc_r;
-    assign brid_o = brid_r;
 
     always @(posedge clk or negedge reset) begin
         if (~reset) begin
@@ -53,7 +48,6 @@ module fetch_instruction(clk, reset,
                 end else begin
                     pc_r <= pc_i;
                 end
-                brid_r <= brid_i;
             end
         end
     end

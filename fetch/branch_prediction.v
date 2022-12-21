@@ -9,7 +9,6 @@ module branch_prediction (
     input clk, reset;
     input v_i;
     input stall_i;
-    input table_i;
     input branch_i;
     input [W_BRID -1: 0] branch_id_i;
     output pred_o;
@@ -17,34 +16,26 @@ module branch_prediction (
 
     reg [W_BRID -1: 0] pred_r;
 
-    wire [W_BRID -1: 0] pred_prev;
     wire [W_BRID -1: 0] pred_next;
+    wire [W_BRID -1: 0] pred_inc;
+    wire [W_BRID -1: 0] pred_dec;
+
     wire miss;
-    wire prev;
-    wire next;
 
-    assign pred_prev = pred_r - 1;
-    assign pred_next = pred_r + 1;
+    assign miss = branch_id_i[W_BRID -1] ^ branch_i;
 
-    assign miss = branch_id_i[1] ^ branch_i;
+    assign pred_inc = {|pred_r, 1'b1};
+    assign pred_dec = {&pred_r, 1'b0};
+    assign pred_next = v_i?(branch_i?pred_inc:pred_dec):pred_r;
 
-    assign prev = miss & |pred_r;
-    assign next = ~miss & ~(&pred_r);
-
-    assign pred_o = pred_r[1] & ~stall_i;
-    assign pred_id_o = pred_r;
+    assign pred_o = pred_next[W_BRID -1] & ~stall_i;
+    assign pred_id_o = pred_next;
 
     always @(posedge clk or negedge reset) begin
         if (~reset) begin
-            pred_r <= 2'b11;
+            pred_r <= 0;
         end else begin
-            if (v_i) begin
-                if (prev) begin
-                    pred_r <= pred_prev;
-                end else if (next) begin
-                    pred_r <= pred_next;
-                end
-            end
+            pred_r <= pred_next;
         end
     end
 endmodule

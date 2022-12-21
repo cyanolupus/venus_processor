@@ -103,8 +103,8 @@ module top_test();
             $display("");
         end
 
-        if (top.pred_bpf & top.v_btf)
-        $display("pred! -> %d / %d", top.pred_addr_btf, top.inst_addr_o);
+        // if (top.pred_bpf & top.v_btf)
+        // $display("pred! -> %d / %d", top.pred_addr_btf, top.inst_addr_o);
 
         if (hlt_o) begin
             $display("|----------------------------------dump---------------------------------|");
