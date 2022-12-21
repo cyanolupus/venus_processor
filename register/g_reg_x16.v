@@ -2,7 +2,7 @@ module g_reg_x16(clk, reset,
                 w_reserve_i,
                 r0_i, r1_i,
                 r_opr0_o, r_opr1_o,
-                reserved_o,
+                reserved0_o, reserved1_o,
                 wb_i, wb_r_i,
                 result_i);
 
@@ -16,7 +16,8 @@ module g_reg_x16(clk, reset,
     input [W_RD -1: 0] r1_i;
     output [W_OPR -1: 0] r_opr0_o;
     output [W_OPR -1: 0] r_opr1_o;
-    output reserved_o;
+    output reserved0_o;
+    output reserved1_o;
 
     input wb_i;
     input [W_RD -1: 0] wb_r_i;
@@ -57,7 +58,8 @@ module g_reg_x16(clk, reset,
     g_reg_cell reg14(clk, reset, result_i, data15, w_reserve[14], w_reserved[14], wb_r[14]);
     g_reg_cell reg15(clk, reset, result_i, data16, w_reserve[15], w_reserved[15], wb_r[15]);
 
-    assign reserved_o = |((opr_req0 | opr_req1) & w_reserved);
+    assign reserved0_o = |(opr_req0 & w_reserved);
+    assign reserved1_o = |(opr_req1 & w_reserved);
 
     assign r_opr0_o = select4from16(r0_i, data1, data2, data3, data4,
                                     data5, data6, data7, data8,

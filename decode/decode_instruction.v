@@ -7,12 +7,13 @@ module decode_instruction(clk, reset,
                 r0_o, r1_o,
                 r_opr0_i, r_opr1_i,
                 imm_o,
-                reserved_i,
+                reserved0_i, reserved1_i,
                 opr0_o, opr1_o,
                 d_info_o,
                 wb_r_o,
                 brid_i, brid_o,
-                branch_i);
+                branch_i,
+                ex_i, ex_r_i, ex_opr_i);
 
     `include "../include/params.v"
     `include "../include/decode_inst.v"
@@ -29,7 +30,8 @@ module decode_instruction(clk, reset,
     output [W_RD -1: 0] r0_o, r1_o;
     input [W_OPR -1: 0] r_opr0_i, r_opr1_i;
     output [W_IMM -1: 0] imm_o;
-    input reserved_i;
+    input reserved0_i;
+    input reserved1_i;
     output [W_OPR -1: 0] opr0_o, opr1_o;
     output [D_INFO -1: 0] d_info_o;
     output [W_RD -1: 0] wb_r_o;
@@ -38,6 +40,10 @@ module decode_instruction(clk, reset,
     output [W_BRID -1: 0] brid_o;
 
     input branch_i;
+
+    input ex_i;
+    input [W_RD -1: 0] ex_r_i;
+    input [W_OPR -1: 0] ex_opr_i;
 
     reg v_r;
     reg [W_IMM -1: 0] imm_r;
@@ -48,21 +54,33 @@ module decode_instruction(clk, reset,
 
     wire [W_IMM -1: 0] imm;
     wire [D_INFO -1: 0] d_info;
+    
+    wire ex_0;
+    wire ex_1;
+
+    wire rsv_no_ex0;
+    wire rsv_no_ex1;
 
     assign d_info = decode_inst(inst_i[WORD -1: W_RD + W_RD + W_IMM]);
     assign r0_o = r0_r;
     assign r1_o = r1_r;
     assign imm = inst_i[W_IMM - 1: 0];
     
-    assign w_reserve_o = v_r & d_info_r[WRSV] & ~reserved_i;
-    assign opr0_o = r_opr0_i;
-    assign opr1_o = r_opr1_i;
+    assign ex_0 = ex_i & (ex_r_i == r0_r);
+    assign ex_1 = ex_i & (ex_r_i == r1_r);
+
+    assign rsv_no_ex0 = reserved0_i & ~ex_0;
+    assign rsv_no_ex1 = reserved1_i & ~ex_1;
+    
+    assign w_reserve_o = v_r & d_info_r[WRSV] & ~(rsv_no_ex0 | rsv_no_ex1);
+    assign opr0_o = ex_0?ex_opr_i:r_opr0_i;
+    assign opr1_o = ex_1?ex_opr_i:r_opr1_i;
     assign wb_r_o = r0_r;
     assign imm_o = imm_r;
     assign pc_o = pc_r;
     assign d_info_o = d_info_r;
 
-    assign stall_o = stall_i & v_r | reserved_i;
+    assign stall_o = stall_i & v_r | (rsv_no_ex0 | rsv_no_ex1);
     assign v_o = v_r & (~stall_o | stall_i);
 
     assign brid_o = brid_r;
@@ -77,7 +95,7 @@ module decode_instruction(clk, reset,
             d_info_r <= 0;
             brid_r <= 0;
         end else begin
-            if ((~stall_i | ~v_r) & ~reserved_i) begin
+            if ((~stall_i | ~v_r) & ~(rsv_no_ex0 | rsv_no_ex1)) begin
                 v_r <= v_i & ~branch_i;
                 r0_r <= inst_i[W_RD + W_RD + W_IMM - 1: W_RD + W_IMM];
                 r1_r <= inst_i[W_RD + W_IMM - 1: + W_IMM];
