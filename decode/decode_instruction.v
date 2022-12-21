@@ -48,7 +48,7 @@ module decode_instruction(clk, reset,
     reg v_r;
     reg [W_IMM -1: 0] imm_r;
     reg [ADDR -1: 0] pc_r;
-    reg [W_OPR -1: 0] r0_r, r1_r;
+    reg [W_RD -1: 0] r0_r, r1_r;
     reg [D_INFO -1: 0] d_info_r;
     reg [W_BRID -1: 0] brid_r;
 

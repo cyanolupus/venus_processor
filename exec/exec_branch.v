@@ -4,7 +4,7 @@ module exec_branch (cc_i, opr1_i,
                 branch_o, branch_addr_o);
 
     `include "../include/params.v"
-    `include "../include/select3from8.v"
+    `include "../include/select3_1bit.v"
 
     input [W_CC -1: 0] cc_i;
     input [ADDR -1: 0] opr1_i;
@@ -16,10 +16,10 @@ module exec_branch (cc_i, opr1_i,
     output [ADDR -1: 0] branch_addr_o;
 
     wire cond_en = select_i[2] & select_i[1];
-    wire c_cc = select3from8(cc_i,
+    wire c_cc = select3_1bit(cc_i,
             1'b1, flags_i[F_ZERO], ~flags_i[F_SIGN], flags_i[F_SIGN], 
             flags_i[F_CRRY], flags_i[F_OVRF], 1'b0, 1'b0) & cond_en;
-    wire c_select = select3from8(select_i,
+    wire c_select = select3_1bit(select_i,
             1'b1, flags_i[F_ZERO], ~flags_i[F_ZERO], ~(flags_i[F_CRRY]|flags_i[F_ZERO]),
             flags_i[F_CRRY], 1'b0, 1'b0, 1'b0) & ~cond_en;
     wire relative = &select_i;
