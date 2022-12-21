@@ -23,6 +23,10 @@ endif
 	$(PYTHON_PATH) ../../vasm/vasm.py $^ > $@
 	echo $(PYTHON_PATH)
 
+verilator-build: ../top_test.v ../top.v ../mem/mem_data.v ../mem/mem_instruction.v $(fetch) $(register) $(decode) $(exec)
+	make ../mem/memfiles/mem_instruction.dat
+	verilator -cc $^
+
 venus_processor_test: ../top_test.v ../top.v ../mem/mem_data.v ../mem/mem_instruction.v $(fetch) $(register) $(decode) $(exec)
 	make ../mem/memfiles/mem_instruction.dat
 	$(VERILOG_PATH) $(VERILOG_OPT) $^
