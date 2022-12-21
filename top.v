@@ -56,7 +56,7 @@ module top(clk, reset, stall_i,
     wire w_reserve_dr;
     wire [W_RD -1: 0] r0_dr, r1_dr;
     wire [W_OPR -1: 0] r_opr0_rd, r_opr1_rd;
-    wire reserved_rd;
+    wire reserved0_rd, reserved1_rd;
 
     // decode - execute
     wire v_de;
@@ -103,12 +103,14 @@ module top(clk, reset, stall_i,
         .r0_o(r0_dr), .r1_o(r1_dr),
         .r_opr0_i(r_opr0_rd), .r_opr1_i(r_opr1_rd),
         .imm_o(imm_de),
-        .reserved_i(reserved_rd),
+        .reserved0_i(reserved0_rd), .reserved1_i(reserved1_rd),
         .opr0_o(opr0_de), .opr1_o(opr1_de),
         .d_info_o(d_info_de),
         .wb_r_o(wb_r_de),
         .brid_i(pred_id_bpd), .brid_o(branch_id_ebp),
-        .branch_i(branch_wire)
+        .branch_i(branch_wire),
+        .ex_i(wb_er), .ex_r_i(wb_r_er),
+        .ex_opr_i(result_er)
     );
 
     g_reg_x16 register(
@@ -116,7 +118,7 @@ module top(clk, reset, stall_i,
         .w_reserve_i(w_reserve_dr),
         .r0_i(r0_dr), .r1_i(r1_dr),
         .r_opr0_o(r_opr0_rd), .r_opr1_o(r_opr1_rd),
-        .reserved_o(reserved_rd),
+        .reserved0_o(reserved0_rd), .reserved1_o(reserved1_rd),
         .wb_i(wb_er), .wb_r_i(wb_r_er),
         .result_i(result_er)
     );
