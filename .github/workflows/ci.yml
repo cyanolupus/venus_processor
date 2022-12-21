@@ -1,4 +1,4 @@
-name: verilog lint
+name: CI
 on:
   push:
     branches:
@@ -6,11 +6,14 @@ on:
   pull_request:
     branches:
       - main
+
 jobs:
-  lint:
+  build:
     runs-on: ubuntu-latest
+    container:
+      image: verilator/verilator:latest
     steps:
-    - uses: actions/checkout@master
-    - uses: chipsalliance/verible-linter-action@main
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Checkout
+        uses: actions/checkout@v3
+    - name: Verilator
+      run: make -C build/ verilator-build
