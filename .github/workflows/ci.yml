@@ -23,5 +23,10 @@ jobs:
       with:
         repository: cyanolupus/vasm
         path: vasm
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.10'
+        architecture: 'x64'
     - name: Verilator
       run: make -C venus_processor/build/ verilator-build
