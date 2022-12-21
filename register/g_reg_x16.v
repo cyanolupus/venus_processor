@@ -8,7 +8,7 @@ module g_reg_x16(clk, reset,
 
     `include "../include/params.v"
     `include "../include/decode4to16.v"
-    `include "../include/select4from16.v"
+    `include "../include/select4_32bit.v"
 
     input clk, reset;
     input w_reserve_i;
@@ -61,11 +61,11 @@ module g_reg_x16(clk, reset,
     assign reserved0_o = |(opr_req0 & w_reserved);
     assign reserved1_o = |(opr_req1 & w_reserved);
 
-    assign r_opr0_o = select4from16(r0_i, data1, data2, data3, data4,
+    assign r_opr0_o = select4_32bit(r0_i, data1, data2, data3, data4,
                                     data5, data6, data7, data8,
                                     data9, data10, data11, data12,
                                     data13, data14, data15, data16);
-    assign r_opr1_o = select4from16(r1_i, data1, data2, data3, data4,
+    assign r_opr1_o = select4_32bit(r1_i, data1, data2, data3, data4,
                                     data5, data6, data7, data8,
                                     data9, data10, data11, data12,
                                     data13, data14, data15, data16);
