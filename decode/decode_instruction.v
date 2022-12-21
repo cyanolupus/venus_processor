@@ -54,7 +54,7 @@ module decode_instruction(clk, reset,
 
     wire [W_IMM -1: 0] imm;
     wire [D_INFO -1: 0] d_info;
-    
+
     wire ex_0;
     wire ex_1;
 
@@ -71,7 +71,7 @@ module decode_instruction(clk, reset,
 
     assign rsv_no_ex0 = reserved0_i & ~ex_0;
     assign rsv_no_ex1 = reserved1_i & ~ex_1;
-    
+
     assign w_reserve_o = v_r & d_info_r[WRSV] & ~(rsv_no_ex0 | rsv_no_ex1);
     assign opr0_o = ex_0?ex_opr_i:r_opr0_i;
     assign opr1_o = ex_1?ex_opr_i:r_opr1_i;
