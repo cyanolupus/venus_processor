@@ -22,7 +22,7 @@ module pc(clk, reset,
     wire [ADDR -1: 0] pc_next;
 
     assign pc_next = pc_r + 1;
-    assign pc_o = stall_i?pc_prev:pc_r;
+    assign pc_o = (pred_i)?pred_addr_i:(stall_i?pc_prev:pc_r);
     assign stall_o = stall_i;
 
     always @(posedge clk or negedge reset) begin
@@ -30,8 +30,10 @@ module pc(clk, reset,
             pc_r <= 0;
         end else begin
             if (branch_i) begin
+                pc_prev <= pc_r;
                 pc_r <= branch_addr_i;
             end else if (pred_i) begin
+                pc_prev <= pred_addr_i;
                 pc_r <= pred_addr_i + 1;
             end else if (~stall_i) begin
                 pc_prev <= pc_r;
