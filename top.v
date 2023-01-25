@@ -11,7 +11,7 @@ module top(clk, reset, stall_i,
     input [WORD -1:0] inst_i;
     output [ADDR -1:0] inst_addr_o;
 
-    assign inst_addr_o = (pred_bpf & v_btf)?pred_addr_btf:pc_pf;
+    assign inst_addr_o = pc_pf;
 
     input [W_OPR -1:0] ldst_data_i;
     output [W_OPR -1:0] ldst_data_o;
@@ -142,8 +142,7 @@ module top(clk, reset, stall_i,
         .stall_i(stall_df), .stall_o(stall_fp),
         .inst_i(inst_i), .inst_o(inst_fd),
         .pc_i(pc_pf), .pc_o(pc_fd),
-        .branch_i(branch_wire),
-        .pred_i(pred_bpf & v_btf), .pred_addr_i(pred_addr_btf)
+        .branch_i(branch_wire)
     );
 
     pc pc(
