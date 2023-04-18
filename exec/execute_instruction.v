@@ -11,7 +11,8 @@ module execute_instruction (clk, reset,
                 hlt_o, brf_o);
 
     `include "../include/params.v"
-    `include "../include/select4from16.v"
+    `include "../include/select4_32bit.v"
+    `include "../include/select4_4bit.v"
 
     input  clk, reset;
     input  v_i;
@@ -69,8 +70,6 @@ module execute_instruction (clk, reset,
     wire [W_OPR -1: 0] result_null = {W_OPR{1'b0}};
     wire [W_OPR -1: 0] selected_result;
 
-    wire [W_FLAGS -1: 0] flags_null = {W_FLAGS{1'b0}};
-    wire [W_OPR -1: 0] selected_flags_pre;
     wire [W_FLAGS -1: 0] selected_flags;
 
     wire [W_CC -1: 0] cc = opr0_i[W_CC -1:0];
@@ -134,19 +133,17 @@ module execute_instruction (clk, reset,
     // input [W_OPR -1: 0] data8, data9, dataa, datab; // logic set none none
     // input [W_OPR -1: 0] datac, datad, datae, dataf; // none none none none
 
-    assign selected_result = select4from16(executor,
+    assign selected_result = select4_32bit(executor,
         result_addx, result_mulx, result_divx, result_null,
         result_absx, result_null, result_shift, result_rotate,
         result_logic, result_set, result_null, result_null,
         result_null, result_null, result_null, result_null);
 
-    assign selected_flags_pre = select4from16(executor,
+    assign selected_flags = select4_4bit(executor,
         flags_addx, flags_mulx, flags_divx, flags_cmp,
-        flags_absx, flags_null, flags_shift, flags_rotate,
-        flags_logic, flags_null, flags_null, flags_null,
-        flags_null, flags_null, flags_null, flags_null);
-    
-    assign selected_flags = selected_flags_pre[W_FLAGS - 1:0];
+        flags_absx, flags_r, flags_shift, flags_rotate,
+        flags_logic, flags_r, flags_r, flags_r,
+        flags_r, flags_r, flags_r, flags_r);
 
     assign v_o = v_r;
     assign stall_o = stall_i;
